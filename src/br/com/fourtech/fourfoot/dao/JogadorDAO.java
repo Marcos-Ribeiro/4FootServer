@@ -36,18 +36,13 @@ public class JogadorDAO implements Crud<Jogador>{
 				Jogador jogador = new Jogador();
 				
 				jogador.setIdJogador(rs.getLong("idjogador"));
-				jogador.setNome(rs.getString("nome"));
-				jogador.setSenha(rs.getString("senha"));
+				jogador.setApelido(rs.getString("apelido"));
 				jogador.setPosicao(rs.getString("posicao"));
 				jogador.setDataNascimento(dtformat.format(rs.getDate("datanascimento")));
 				
 				listaJogador.add(jogador);
 				
 			}
-			
-			ps.close();
-			rs.close();
-			conexao.close();
 			
 		}catch (SQLException e){
 			e.printStackTrace();
@@ -58,7 +53,7 @@ public class JogadorDAO implements Crud<Jogador>{
 	@Override
 	public Jogador getObject(Long id) {
 		Jogador jogador = new Jogador();
-		String sql = "SELECT * FROM jogador WHERE idjogador = ?;";
+		String sql = "SELECT * FROM jogador WHERE idusuario = ?;";
 		
 		try{
 			PreparedStatement ps = conexao.prepareStatement(sql);
@@ -68,17 +63,12 @@ public class JogadorDAO implements Crud<Jogador>{
 			while(rs.next()){
 							
 				jogador.setIdJogador(rs.getLong("idjogador"));
-				jogador.setNome(rs.getString("nome"));
-				jogador.setSenha(rs.getString("senha"));
+				jogador.setApelido(rs.getString("apelido"));
 				jogador.setPosicao(rs.getString("posicao"));
 				jogador.setDataNascimento(dtformat.format(rs.getDate("datanascimento")));
 								
 			}
-			
-			ps.close();
-			rs.close();
-			conexao.close();
-			
+						
 		}catch (SQLException e){
 			e.printStackTrace();
 		}
@@ -89,8 +79,7 @@ public class JogadorDAO implements Crud<Jogador>{
 	@Override
 	public void alterar(Jogador jogador) {
 		String sql = "UPDATE jogador SET "
-				+ " nome = ?,"
-				+ " senha = ?,"
+				+ " apelido = ?,"
 				+ " posicao = ?,"
 				+ " datanascimento = ? "
 				+ " WHERE idjogador = ?;";
@@ -98,16 +87,12 @@ public class JogadorDAO implements Crud<Jogador>{
 		try{
 			PreparedStatement ps = conexao.prepareStatement(sql);
 			
-			ps.setString(1, jogador.getNome());
-			ps.setString(2, jogador.getSenha());
-			ps.setString(3, jogador.getPosicao());
-			ps.setDate(4, new Date(dtformat.parse(jogador.getDataNascimento()).getTime()));
-			ps.setLong(5, jogador.getIdJogador());
+			ps.setString(1, jogador.getApelido());
+			ps.setString(2, jogador.getPosicao());
+			ps.setDate(3, new Date(dtformat.parse(jogador.getDataNascimento()).getTime()));
+			ps.setLong(4, jogador.getIdJogador());
 			
 			ps.execute();
-			
-			ps.close();
-			conexao.close();
 			
 		}catch (Exception e){
 			e.printStackTrace();
@@ -126,8 +111,6 @@ public class JogadorDAO implements Crud<Jogador>{
 			
 			ps.execute();
 			
-			ps.close();
-			conexao.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -138,65 +121,27 @@ public class JogadorDAO implements Crud<Jogador>{
 	public void inserir(Jogador jogador) {
 		// TODO Auto-generated method stub
 		String sql = "INSERT INTO jogador "
-				+ "(nome,"
-				+ " senha,"
+				+ " apelido,"
 				+ " posicao,"
 				+ " datanascimento)"
 				+ " VALUES "
 				+ "(?,"
-				+ "	?,"
 				+ "	?,"
 				+ "	?);";
 		
 		try {
 			PreparedStatement ps = conexao.prepareStatement(sql);
 			
-			ps.setString(1, jogador.getNome());
-			ps.setString(2, jogador.getSenha());
+			ps.setString(1, jogador.getApelido());
 			ps.setString(3, jogador.getPosicao());			
 			ps.setDate(4, new Date(dtformat.parse(jogador.getDataNascimento()).getTime()));
 			
 			ps.execute();
-			
-			ps.close();
-			conexao.close();
-			
+						
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			throw new RuntimeException("ERRO = " + e.getMessage().replaceAll("\"", ""));
 		}
 	}	
-	
-	/*VALIDA USUARIO*/
-	public Jogador login(String nome, String senha){
-		String sql = "SELECT * FROM jogador WHERE nome = ? AND senha = ?;";
-		
-		Jogador jogador = new Jogador();
-		
-		try {
-			PreparedStatement ps = conexao.prepareStatement(sql);
-			ps.setString(1, nome);
-			ps.setString(2, senha);
-			
-			ResultSet rs = ps.executeQuery();
-						
-			while(rs.next()){
-				jogador.setIdJogador(rs.getLong("idjogador"));
-				jogador.setNome(rs.getString("nome"));
-				jogador.setDataNascimento(dtformat.format(rs.getDate("datanascimento")));
-				jogador.setPosicao(rs.getString("posicao"));
-				jogador.setSenha(rs.getString("senha"));
-			}
-			
-			rs.close();
-			ps.close();
-			conexao.close();
-			
-		}catch (SQLException e){
-			e.printStackTrace();
-		}	
-		return jogador;
-	}
-	
 }
 

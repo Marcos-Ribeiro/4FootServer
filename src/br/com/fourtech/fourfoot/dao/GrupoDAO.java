@@ -36,10 +36,6 @@ public class GrupoDAO implements Crud<Grupo>{
 				listaGrupo.add(grupo);
 			}
 			
-			ps.close();
-			rs.close();
-			conexao.close();
-			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -86,10 +82,7 @@ public class GrupoDAO implements Crud<Grupo>{
 			ps.setString(1, grupo.getNome());
 			
 			ps.execute();
-			
-			ps.close();
-			conexao.close();
-			
+					
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			throw new RuntimeException("ERRO = " + e.getMessage().replaceAll("\"", ""));
@@ -106,11 +99,9 @@ public class GrupoDAO implements Crud<Grupo>{
 			PreparedStatement ps = conexao.prepareStatement(sql);
 			
 			ps.setString(1, grupo.getNome());
+			ps.setLong(2, grupo.getIdgrupo());
 			
 			ps.execute();
-			
-			ps.close();
-			conexao.close();
 			
 		}catch (Exception e){
 			e.printStackTrace();
@@ -128,11 +119,34 @@ public class GrupoDAO implements Crud<Grupo>{
 			
 			ps.execute();
 			
-			ps.close();
-			conexao.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+	
+	
+	public Grupo getGruposJogador(Long idGrupo){
+		String sql = "SELECT * FROM grupo g WHERE g.idgrupo = ?;";
+		
+		try {
+			PreparedStatement ps = conexao.prepareStatement(sql);
+			ps.setLong(1, idGrupo);
+			ResultSet rs = ps.executeQuery();
+		
+			Grupo grupo = new Grupo();
+			
+			grupo.setIdgrupo(rs.getLong("idgrupo"));
+			grupo.setNome(rs.getString("nome"));
+			
+			return grupo;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	
 }

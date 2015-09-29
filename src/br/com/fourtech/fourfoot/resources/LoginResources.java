@@ -7,9 +7,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
-import br.com.fourtech.fourfoot.dao.JogadorDAO;
+import br.com.fourtech.fourfoot.dao.UsuarioDAO;
 import br.com.fourtech.fourfoot.db.ConnectionFactory;
-import br.com.fourtech.fourfoot.model.Jogador;
+import br.com.fourtech.fourfoot.model.Usuario;
 
 @Path("login")
 public class LoginResources {
@@ -17,16 +17,10 @@ public class LoginResources {
 	@Path("{nome}/{senha}")
 	@GET
 	@Produces("application/json")
-	public Jogador login(@PathParam("nome") String nome, @PathParam("senha") String senha){
+	public Usuario login(@PathParam("nome") String nome, @PathParam("senha") String senha){
 		Connection conexao = new ConnectionFactory().getConnection();
-		JogadorDAO dao = new JogadorDAO(conexao);		
-		return dao.login(nome, senha);
+		UsuarioDAO dao = new UsuarioDAO(conexao);		
+		return dao.getLogin(nome, senha);
 	}
-//	
-//	@GET
-//	@Path("teste")
-//	@Produces("application/json")
-//	public String teste(){
-//		return "TESTE";
-//	}
+
 }
